@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // 'const' constante na compilação e não 'final' constante na execução
-  final questions = const [
+  final _questions = const [
     {
       'questionText': 'What\'s your favorite color',
       'answers': [
@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
   int _questionIndex = 0;
 
   void _answerQuestion() {
-    final isQuestionAnswered = _questionIndex < questions.length - 1;
+    final isQuestionAnswered = _questionIndex < _questions.length - 1;
 
     setState(() {
       _questionIndex++;
@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final isQuizOn = _questionIndex < questions.length;
+    final isQuizOn = _questionIndex < _questions.length;
 
     return MaterialApp(
       home: Scaffold(
@@ -71,20 +71,12 @@ class _MyAppState extends State<MyApp> {
           title: Text('Quizzzzzzz'),
         ),
         body: isQuizOn
-            ? Column(
-                children: [
-                  Question(
-                    questions[_questionIndex]['questionText'] as String,
-                  ),
-                  ...(questions[_questionIndex]['answers'] as List<String>)
-                      .map((answer) {
-                    return Answer(_answerQuestion, answer);
-                  }).toList()
-                ],
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questions: _questions,
+                questionIndex: _questionIndex,
               )
-            : Center(
-                child: Text('Quiz complete!'),
-              ),
+            : Result()
       ),
     );
   }
