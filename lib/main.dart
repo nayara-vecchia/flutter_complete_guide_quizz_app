@@ -45,35 +45,46 @@ class _MyAppState extends State<MyApp> {
     },
   ];
 
-  var _questionIndex = 0;
+  int _questionIndex = 0;
 
   void _answerQuestion() {
-    if (_questionIndex < questions.length - 1) {
-      setState(() {
-        _questionIndex++;
-      });
-      print(_questionIndex);
+    final isQuestionAnswered = _questionIndex < questions.length - 1;
+
+    setState(() {
+      _questionIndex++;
+    });
+
+    if (isQuestionAnswered) {
+      print('tá on!');
+    } else {
+      print('cabou!');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isQuizOn = _questionIndex < questions.length;
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('Quizzzzzzz'),
         ),
-        body: Column(
-          children: [
-            Question(
-              questions[_questionIndex]['questionText'],
-            ),
-            ...(questions[_questionIndex]['answers'] as List<String>)
-                .map((answer) {
-              return Answer(_answerQuestion, answer);
-            }).toList()
-          ],
-        ),
+        body: isQuizOn
+            ? Column(
+                children: [
+                  Question(
+                    questions[_questionIndex]['questionText'] as String,
+                  ),
+                  ...(questions[_questionIndex]['answers'] as List<String>)
+                      .map((answer) {
+                    return Answer(_answerQuestion, answer);
+                  }).toList()
+                ],
+              )
+            : Center(
+                child: Text('Quiz complete!'),
+              ),
       ),
     );
   }
