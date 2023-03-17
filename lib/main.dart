@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // 'const' constante na compilação e não 'final' constante na execução
-  final questions = const [
+  final _questions = const [
     {
       'questionText': 'What\'s your favorite color',
       'answers': [
@@ -45,35 +45,38 @@ class _MyAppState extends State<MyApp> {
     },
   ];
 
-  var _questionIndex = 0;
+  int _questionIndex = 0;
 
   void _answerQuestion() {
-    if (_questionIndex < questions.length - 1) {
-      setState(() {
-        _questionIndex++;
-      });
-      print(_questionIndex);
+    final isQuestionAnswered = _questionIndex < _questions.length - 1;
+
+    setState(() {
+      _questionIndex++;
+    });
+
+    if (isQuestionAnswered) {
+      print('tá on!');
+    } else {
+      print('cabou!');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isQuizOn = _questionIndex < _questions.length;
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('Quizzzzzzz'),
         ),
-        body: Column(
-          children: [
-            Question(
-              questions[_questionIndex]['questionText'],
-            ),
-            ...(questions[_questionIndex]['answers'] as List<String>)
-                .map((answer) {
-              return Answer(_answerQuestion, answer);
-            }).toList()
-          ],
-        ),
+        body: isQuizOn
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questions: _questions,
+                questionIndex: _questionIndex,
+              )
+            : Result()
       ),
     );
   }
