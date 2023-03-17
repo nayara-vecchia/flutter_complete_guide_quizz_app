@@ -19,36 +19,45 @@ class _MyAppState extends State<MyApp> {
     {
       'questionText': 'What\'s your favorite color',
       'answers': [
-        'Black',
-        'Red',
-        'White',
-        'Green',
+        {'text': 'Black', 'score': 1},
+        {'text': 'Red', 'score': 0},
+        {'text': 'White', 'score': 0},
+        {'text': 'Green', 'score': 0},
       ],
     },
     {
       'questionText': 'What\'s your favorite animal',
       'answers': [
-        'Dog',
-        'Cat',
-        'Rabbit',
-        'Horse',
+        {'text': 'Dog', 'score': 1},
+        {'text': 'Cat', 'score': 1},
+        {'text': 'Rabbit', 'score': 1},
+        {'text': 'Horse', 'score': 1},
       ],
     },
     {
       'questionText': 'Who\'s your favorite artist',
       'answers': [
-        'taylor swift',
-        'taylor swift',
-        'taylor swift',
-        'taylor swift',
+        {'text': 'taylor swift', 'score': 1},
+        {'text': 'taylor swift', 'score': 1},
+        {'text': 'taylor swift', 'score': 1},
+        {'text': 'taylor swift', 'score': 1},
       ],
     },
   ];
 
   int _questionIndex = 0;
+  int _totalScore = 0;
 
-  void _answerQuestion() {
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerQuestion(int score) {
     final isQuestionAnswered = _questionIndex < _questions.length - 1;
+    _totalScore += score;
 
     setState(() {
       _questionIndex++;
@@ -67,17 +76,16 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Quizzzzzzz'),
-        ),
-        body: isQuizOn
-            ? Quiz(
-                answerQuestion: _answerQuestion,
-                questions: _questions,
-                questionIndex: _questionIndex,
-              )
-            : Result()
-      ),
+          appBar: AppBar(
+            title: Text('Quizzzzzzz'),
+          ),
+          body: isQuizOn
+              ? Quiz(
+                  answerQuestion: _answerQuestion,
+                  questions: _questions,
+                  questionIndex: _questionIndex,
+                )
+              : Result(_totalScore, _resetQuiz)),
     );
   }
 }
