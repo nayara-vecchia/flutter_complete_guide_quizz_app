@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // 'const' constante na compilação e não 'final' constante na execução
-  final _questions = const [
+  final _questionsData = const [
     {
       'questionText': 'What\'s your favorite color',
       'answers': [
@@ -55,8 +55,8 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void _answerQuestion(int score) {
-    final isQuestionAnswered = _questionIndex < _questions.length - 1;
+  void _handleAnswerQuestion(int score) {
+    final isQuestionAnswered = _questionIndex < _questionsData.length - 1;
     _totalScore += score;
 
     setState(() {
@@ -72,7 +72,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final isQuizOn = _questionIndex < _questions.length;
+    final isQuizOn = _questionIndex < _questionsData.length;
 
     return MaterialApp(
       home: Scaffold(
@@ -81,8 +81,8 @@ class _MyAppState extends State<MyApp> {
           ),
           body: isQuizOn
               ? Quiz(
-                  answerQuestion: _answerQuestion,
-                  questions: _questions,
+                  handleAnswerQuestion: _handleAnswerQuestion,
+                  questionsData: _questionsData,
                   questionIndex: _questionIndex,
                 )
               : Result(_totalScore, _resetQuiz)),
